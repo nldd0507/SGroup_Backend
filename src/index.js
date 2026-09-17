@@ -1,23 +1,26 @@
 import express from "express";
-import router from "./route/route.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+dotenv.config();
+
+import router from "./route/route.js";
+import errorHandler from "./middleware/errorHandler.js";
 const app = express();
 app.use(express.json());
+const PORT = process.env.PORT || 3000;
+app.get('/', (req, res) => {
+  res.send('API is running...');
+});
 app.use("/", router);
 
-app.get("/", (req, res) => {
-  res.send("<h1>Hello, World!</h1>");
-});
+app.use(errorHandler);
 
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  return res.status(statusCode).json({
-    status: 'error',
-    code: statusCode,
-    message: err.message || 'Internal Server Error'
-  });
-});
-
-app.listen(3000, () => {
-  console.log("Server is running on port http://localhost:3000");
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
 });

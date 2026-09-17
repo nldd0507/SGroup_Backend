@@ -22,7 +22,7 @@ export const createUser =catchAsync( async (req, res) => {
     if (!name || !email) throw new BadRequestError('Name and email are required');
     const newUser = await usersService.createUser({ name, email, age });
     
-    return sendSuccess(res, 201, 'User created successfully');
+    return sendSuccess(res, 201, 'User created successfully', newUser);
 })
 
 export const deleteUser = catchAsync( async (req, res) => {
@@ -30,7 +30,7 @@ export const deleteUser = catchAsync( async (req, res) => {
     const deletedUser = await usersService.deleteUser(userId);
 
     if (!deletedUser) throw new NotFoundError('User not found');
-    return sendSuccess(res, 200, 'Deleted user successfully');
+    return sendSuccess(res, 200, 'Deleted user successfully', deletedUser);
 
 })
 
@@ -41,7 +41,7 @@ export const updateUser = catchAsync(async (req, res) => {
 
     const updatedUser = await usersService.updateUser(userId, updateData);
 
-    if (!updateData) throw new NotFoundError('User not found');
+    if (!updatedUser) throw new NotFoundError('User not found');
 
-    return sendSuccess(res, 200,'Update user successfully');
+    return sendSuccess(res, 200,'Update user successfully', updatedUser);
 })
