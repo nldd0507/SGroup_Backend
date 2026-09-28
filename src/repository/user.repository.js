@@ -50,3 +50,15 @@ export const deleteById = async (id) => {
   const { rows } = await pool.query(query, [id]);
   return rows[0] || null;
 };
+
+
+export const updateAvatar = async (userId, avatarUrl) => {
+  const query =
+    `UPDATE users
+    SET avatar_url = $1
+    WHERE id = $2
+    RETURNING id, name, email, avatar_url`;
+
+  const { rows } = await pool.query(query, [avatarUrl, userId]);
+  return rows[0];
+}
